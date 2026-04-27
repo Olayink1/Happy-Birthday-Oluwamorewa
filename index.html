@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>Happy Birthday Oluwamorewa ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* MAIN */
+.container {
+    text-align: center;
+    z-index: 2;
+}
+
+/* PROFILE */
+.profile {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 6px;
+    background: linear-gradient(45deg, gold, hotpink);
+    margin: auto;
+    animation: float 3s ease-in-out infinite;
+}
+.profile img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes float {
+    50% { transform: translateY(-10px); }
+}
+
+/* TEXT */
+h1 {
+    animation: glow 2s infinite alternate;
+}
+@keyframes glow {
+    from { text-shadow: 0 0 10px #fff; }
+    to { text-shadow: 0 0 30px #ff4da6; }
+}
+
+/* BUTTON */
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border-radius: 30px;
+    border: none;
+    background: #ff4da6;
+    color: white;
+    cursor: pointer;
+}
+
+/* MESSAGE SCREEN */
+.message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    opacity: 0;
+    transform: scale(1.2);
+    visibility: hidden;
+    transition: all 0.8s ease;
+    z-index: 10;
+}
+
+.message.active {
+    opacity: 1;
+    transform: scale(1);
+    visibility: visible;
+}
+
+/* COUNTDOWN */
+.countdown {
+    font-size: 4em;
+    font-weight: bold;
+}
+
+/* SLIDESHOW */
+.slideshow {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.slideshow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* TEXT BOX */
+.text-box {
+    max-width: 500px;
+    font-size: 1.1em;
+    min-height: 150px;
+}
+
+/* HEARTS */
+svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.heart {
+    fill: red;
+    opacity: 0.6;
+    animation: floatUp 8s infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="profile">
+        <img src="photo1.jpeg">
+    </div>
+
+    <h1>Happy Birthday Oluwamorewa ❤️</h1>
+    <p>My amazing girl 💕</p>
+
+    <button onclick="startSurprise()">Read Olayinka's Wishes 💌</button>
+</div>
+
+<!-- MESSAGE SCREEN -->
+<div class="message" id="messageBox">
+
+    <div class="countdown" id="countdown">5</div>
+
+    <div id="content" style="display:none; text-align:center;">
+
+        <!-- SLIDESHOW -->
+        <div class="slideshow">
+            <img id="slide" src="photo4.jpeg">
+        </div>
+
+        <!-- TYPING TEXT -->
+        <div class="text-box" id="typedText"></div>
+
+        <button onclick="goBack()">Back ❤️</button>
+        <button onclick="downloadPDF()" style="margin-top:15px; background:#6a0dad;">
+        Download Olayinka's Special Wishes 📄</button>
+    </div>
+</div>
+
+<!-- HEARTS -->
+<svg>
+    <circle class="heart" cx="10%" r="10">
+        <animate attributeName="cy" from="600" to="-50" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle class="heart" cx="50%" r="12">
+        <animate attributeName="cy" from="700" to="-50" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle class="heart" cx="80%" r="10">
+        <animate attributeName="cy" from="800" to="-50" dur="10s" repeatCount="indefinite"/>
+    </circle>
+</svg>
+
+<script>
+function startSurprise() {
+    const box = document.getElementById("messageBox");
+    const countdown = document.getElementById("countdown");
+    const content = document.getElementById("content");
+
+    box.classList.add("active");
+
+    let count = 5;
+    countdown.innerText = count;
+
+    let interval = setInterval(() => {
+        count--;
+        countdown.innerText = count;
+
+        if (count === 0) {
+            clearInterval(interval);
+            countdown.style.display = "none";
+            content.style.display = "block";
+            startTyping();
+            startSlideshow();
+        }
+    }, 1000);
+}
+
+/* TYPING EFFECT */
+const messageText = `Happy Birthday Omo miii ❤️
+
+I'm writing this specially you Morewa. My only big head and stubborn girl. You mean so much to me, and I hope you know that well. I pray that God blesses you with endless joy, peace, and success.
+May your life be filled with love and greatness 🙏
+
+Everything you touch shall prosper.
+Your dreams will come true beyond imagination 💕
+
+I love you forever ❤️`;
+
+function startTyping() {
+    let i = 0;
+    const speed = 30;
+    const target = document.getElementById("typedText");
+
+    function type() {
+        if (i < messageText.length) {
+            target.innerHTML += messageText.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+/* SLIDESHOW */
+const images = ["photo1.jpeg", "photo4.jpeg", "photo3.jpeg"];
+let index = 0;
+
+function startSlideshow() {
+    setInterval(() => {
+        index = (index + 1) % images.length;
+        document.getElementById("slide").src = images[index];
+    }, 2500);
+}
+
+/* PDF DOWNLOAD */
+const pdfMessage = `
+Happiest birthday Oluwamorewa mii,
+
+The most closiest to my heart, I know you don't believe that but trust me You are.
+
+I’ve been trying to find the right words to tell you how much you mean to me,
+but the truth is, a simple "I love you" barely scratches the surface.
+You are not just my best friend; you are my love, my amazing partner,
+my Ijogbon girl and the person who makes every single day worth looking forward to. 
+I really do not plan and expect I would meet a soul like you not even this year.
+But God is Forever Faithful and I'm grateful for the gift of you.
+
+One thing that stands out in you is your Boldness and Fearlessness.
+I really love your AUDACITY Morewa, Keep being you always.
+Watching the way you navigate the world with such boldness and kindness inspires me more than
+you’ll ever know.
+
+You have this amazing ability to make everything better just by being there,
+and I feel like the luckiest person to have you.
+A Very Strong and Resilent Lady you are.
+
+On your special day, I want you to know that you are appreciated, you are deeply admired,
+and you are loved beyond measure. 
+I hope today is as beautiful and radiant as your soul is Morewa.
+I pray God grant you all that your hear desires on earth IJMN.
+Doors of success, Greatness, prosperity and Elevation will begin to open unto you Ijmn
+
+Thank you for being my Favourite person. I love you so much Omo miii.
+Happy Birthday once again Iyawo mii. 
+`;
+
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const text = `
+
+${pdfMessage}
+
+`;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(text, 9, 9);
+
+    doc.save("Happy_Birthday_Morewa.pdf");
+}
+
+function goBack() {
+    location.reload();
+}
+</script>
+
+</body>
+</html>
